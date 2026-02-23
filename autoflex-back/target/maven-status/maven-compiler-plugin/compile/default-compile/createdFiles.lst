@@ -1,0 +1,4 @@
+org\autoflex\GreetingResource.class
+org\autoflex\service\ProductsRawMaterialsService.class
+org\autoflex\service\ProductsService.class
+org\autoflex\service\RawMaterialsService.class
