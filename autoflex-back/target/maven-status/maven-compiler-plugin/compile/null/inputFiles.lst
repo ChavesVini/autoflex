@@ -1,8 +1,11 @@
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\controller\ProductsController.java
-C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\dto\ProductsDto.java
+C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\dto\ProductsRawMaterialsDto.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\dto\RawMaterialsDto.java
+C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\dto\RegisterProductsDto.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\ProductsEntity.java
+C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\ProductsRawMaterials.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\entity\RawMaterialsEntity.java
+C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\exception\NoSuchElementExceptionMapper.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\GreetingResource.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\repository\ProductsRepository.java
 C:\Users\ViniD\OneDrive\Área de Trabalho\autoflex\autoflex-back\src\main\java\org\autoflex\service\ProductsRawMaterialsService.java
