@@ -1,13 +1,15 @@
 package org.autoflex.controller;
 
-import org.autoflex.entity.dto.RegisterProductsDto;
+import org.autoflex.entity.dto.ProductsDto;
 import org.autoflex.service.ProductsService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -29,7 +31,7 @@ public class ProductsController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response registerProduct(@Valid RegisterProductsDto registerProductsDto) {
+    public Response registerProduct(@Valid ProductsDto registerProductsDto) {
         var createdProduct = productsService.registerProduct(registerProductsDto);
         return Response.status(Response.Status.CREATED)
         .entity(createdProduct)
@@ -41,11 +43,6 @@ public class ProductsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("id") Long code) {
         var product = productsService.getProduct(code);
-
-        if (product == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
         return Response.ok(product).build();
     }
 
@@ -63,5 +60,35 @@ public class ProductsController {
         }
 
         return Response.ok(products).build();
+    }
+
+    @PUT
+    @Path("/update/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProduct(
+        @PathParam("id") Long code,
+        @Valid ProductsDto updateProductsDto
+    ) {
+        System.out.println("Updating product with ID: " + code);
+        var products = productsService.updateProduct(updateProductsDto, code);
+
+        if (products == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(products).build();
+    }
+
+    @DELETE
+    @Path("/delete/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteProduct(
+        @PathParam("id") Long code
+    ) {
+        productsService.deleteProduct(code);
+
+        return Response.noContent().build();
+
     }
 }

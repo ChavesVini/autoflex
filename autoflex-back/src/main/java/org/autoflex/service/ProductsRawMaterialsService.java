@@ -1,37 +1,103 @@
 package org.autoflex.service;
 
-import org.autoflex.entity.RawMaterialsEntity;
-import org.autoflex.entity.dto.RegisterRawMaterialsDto;
-import org.autoflex.repository.RawMaterialsRepository;
+import java.util.Set;
+
+import org.autoflex.entity.ProductsRawMaterialsEntity;
+import org.autoflex.entity.dto.ProductsRawMaterialsDto;
+import org.autoflex.exception.exceptions.EmptyUpdateRequestException;
+import org.autoflex.exception.exceptions.NoSuchElementException;
+import org.autoflex.repository.ProductsRawMaterialsRepository;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 public class ProductsRawMaterialsService {
-    private final RawMaterialsRepository rawMaterialsRepository;
+    private final ProductsRawMaterialsRepository productsRawMaterialsRepository;
     
     @Inject
-    public ProductsRawMaterialsService(RawMaterialsRepository rawMaterialsRepository) {
-        this.rawMaterialsRepository = rawMaterialsRepository;
+    public ProductsRawMaterialsService(ProductsRawMaterialsRepository productsRawMaterialsRepository) {
+        this.productsRawMaterialsRepository = productsRawMaterialsRepository;
     }
     
     @Transactional
-    public RegisterRawMaterialsDto registerProduct(RegisterRawMaterialsDto request) {
+    public ProductsRawMaterialsDto registerProductAndRawMaterial(ProductsRawMaterialsDto request) {
 
-        var product = new RawMaterialsEntity();
-        product.setName(request.name());
-        product.setQuantity(request.quantity());
+        var productAndRawMaterial = new ProductsRawMaterialsEntity();
+        productAndRawMaterial.setProductId(request.productId());
+        productAndRawMaterial.setRawMaterialsId(request.rawMaterialsId());
+        productAndRawMaterial.setQuantity(request.quantity());
 
-        rawMaterialsRepository.persist(product);
+        productsRawMaterialsRepository.persist(productAndRawMaterial);
 
-        return new RegisterRawMaterialsDto(product.getName(), product.getQuantity());
+        return new ProductsRawMaterialsDto(
+            productAndRawMaterial.getProductId(),
+            productAndRawMaterial.getRawMaterialsId(),
+            productAndRawMaterial.getQuantity()
+        );
     }
 
-    public void getProduct(String code) {
-        System.out.println("Getting product with code: " + code);
+    public ProductsRawMaterialsEntity getProduct(Long code) {
+
+        var productAndRawMaterial = productsRawMaterialsRepository.findById(code);
+
+        if (productAndRawMaterial == null) {
+            throw new NoSuchElementException("O produto e matéria-prima não existe!");
+        }
+
+        return productAndRawMaterial;
     }
 
-    public void updateProduct(String code, String name, double price) {
-        System.out.println("Product updated: " + code + ", " + name + ", " + price);
+    public Set<ProductsRawMaterialsEntity> getAllProducts(int page, int size) {
+        return productsRawMaterialsRepository.findAll().stream()
+                .skip((long) page * size)
+                .limit(size)
+                .collect(java.util.stream.Collectors.toSet());
+    }
+
+    @Transactional        
+    public ProductsRawMaterialsEntity updateProduct(ProductsRawMaterialsDto update, Long code) {   
+        var updateProduct = productsRawMaterialsRepository.findById(code);
+
+        if (updateProduct == null) {
+            throw new NoSuchElementException("O produto e matéria-prima não existe!");
+        }
+
+        boolean hasUpdates = false;
+
+        if (update.productId() != null) {
+            updateProduct.setProductId(update.productId());
+            hasUpdates = true;
+        } 
+        
+        if (update.rawMaterialsId() != null) {
+            updateProduct.setRawMaterialsId(update.rawMaterialsId());
+            hasUpdates = true;
+        } 
+        
+        if (update.quantity() != null) {
+            updateProduct.setQuantity(update.quantity());
+            hasUpdates = true;
+        } 
+        
+        if (!hasUpdates) {
+            throw new EmptyUpdateRequestException("Nenhum campo para atualizar foi fornecido.");
+        }
+
+        productsRawMaterialsRepository.persist(updateProduct);
+
+        return updateProduct;
+    }
+
+    @Transactional
+    public void deleteProduct(Long code) {
+        var product = productsRawMaterialsRepository.findById(code);
+
+        if (product == null) {
+            throw new NoSuchElementException("O produto e matéria-prima não existe!");
+        }
+
+        if (product != null) {
+            productsRawMaterialsRepository.delete(product);
+        }
     }
 }

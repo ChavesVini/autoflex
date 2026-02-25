@@ -1,13 +1,15 @@
 package org.autoflex.controller;
 
-import org.autoflex.entity.dto.RegisterRawMaterialsDto;
+import org.autoflex.entity.dto.RawMaterialsDto;
 import org.autoflex.service.RawMaterialsService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -29,7 +31,7 @@ public class RawMaterialsController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response registerRawMaterial(@Valid RegisterRawMaterialsDto registerRawMaterialsDto) {
+    public Response registerRawMaterial(@Valid RawMaterialsDto registerRawMaterialsDto) {
         var createdProduct = rawMaterialsService.registerRawMaterial(registerRawMaterialsDto);
         return Response.status(Response.Status.CREATED)
         .entity(createdProduct)
@@ -63,5 +65,33 @@ public class RawMaterialsController {
         }
 
         return Response.ok(products).build();
+    }
+    
+    @PUT
+    @Path("/update/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProduct(
+        @PathParam("id") Long code,
+        @Valid RawMaterialsDto updateRawMaterialsDto
+    ) {
+        var products = rawMaterialsService.updateRawMaterial(updateRawMaterialsDto, code);
+
+        if (products == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(products).build();
+    }
+
+    @DELETE
+    @Path("/delete/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteProduct(
+        @PathParam("id") Long code
+    ) {
+        rawMaterialsService.deleteRawMaterial(code);
+
+        return Response.noContent().build();
     }
 }

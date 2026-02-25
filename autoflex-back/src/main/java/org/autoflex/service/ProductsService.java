@@ -1,12 +1,12 @@
 package org.autoflex.service;
 
-import java.util.List;
+import java.util.Set;
 
 import org.autoflex.entity.ProductsEntity;
-import org.autoflex.entity.dto.RegisterProductsDto;
+import org.autoflex.entity.dto.ProductsDto;
+import org.autoflex.exception.exceptions.EmptyUpdateRequestException;
+import org.autoflex.exception.exceptions.NoSuchElementException;
 import org.autoflex.repository.ProductsRepository;
-
-import io.quarkus.panache.common.Page;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -22,7 +22,7 @@ public class ProductsService {
     }
     
     @Transactional
-    public RegisterProductsDto registerProduct(RegisterProductsDto request) {
+    public ProductsDto registerProduct(ProductsDto request) {
 
         var product = new ProductsEntity();
         product.setName(request.name());
@@ -30,28 +30,68 @@ public class ProductsService {
 
         productRepository.persist(product);
 
-        return new RegisterProductsDto(product.getName(), product.getPrice());
+        return new ProductsDto(product.getName(), product.getPrice());
     }
 
-    public RegisterProductsDto getProduct(Long code) {
+    public ProductsEntity getProduct(Long code) {
 
-        var searchProduct = productRepository.findById(code);
+        var product = productRepository.findById(code);
 
-        if (searchProduct == null) {
-            return null;
+        if (product == null) {
+            throw new NoSuchElementException("O produto não existe!");
         }
 
-        return new RegisterProductsDto(searchProduct.getName(), searchProduct.getPrice());
+        return product;
     }
 
-    public List<RegisterProductsDto> getAllProducts(int page, int size) {
-        return productRepository.findAll()
-            .page(Page.of(page, size))
-            .stream()
-            .map(entity -> new RegisterProductsDto(
-                entity.getName(),
-                entity.getPrice()
-            ))
-            .toList();
+    public Set<ProductsEntity> getAllProducts(int page, int size) {
+        return productRepository.findAll().stream()
+                .skip((long) page * size)
+                .limit(size)
+                .collect(java.util.stream.Collectors.toSet());
+    }
+
+    @Transactional        
+    public ProductsEntity updateProduct(ProductsDto update, Long code) {
+        System.out.println("Updating product with ID: " + code);
+        System.out.println("Updating product with ID: " + update);       
+        var updateProduct = productRepository.findById(code);
+
+        if (updateProduct == null) {
+            throw new NoSuchElementException("O produto não existe!");
+        }
+
+        boolean hasUpdates = false;
+
+        if (update.name() != null) {
+            updateProduct.setName(update.name());
+            hasUpdates = true;
+        } 
+        
+        if (update.price() != null) {
+            updateProduct.setPrice(update.price());
+            hasUpdates = true;
+        } 
+        
+        if (!hasUpdates) {
+            throw new EmptyUpdateRequestException("Nenhum campo para atualizar foi fornecido.");
+        }
+
+        productRepository.persist(updateProduct);
+
+        return updateProduct;
+    }
+
+    @Transactional
+    public void deleteProduct(Long code) {
+        var product = productRepository.findById(code);
+
+        if (product == null) {
+            throw new NoSuchElementException("O produto não existe!");
+        }
+
+        if (product != null) {
+            productRepository.delete(product);
+        }
     }
 }
