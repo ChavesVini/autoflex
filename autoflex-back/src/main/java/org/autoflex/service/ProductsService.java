@@ -1,8 +1,12 @@
 package org.autoflex.service;
 
+import java.util.List;
+
 import org.autoflex.entity.ProductsEntity;
 import org.autoflex.entity.dto.RegisterProductsDto;
 import org.autoflex.repository.ProductsRepository;
+
+import io.quarkus.panache.common.Page;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,11 +33,25 @@ public class ProductsService {
         return new RegisterProductsDto(product.getName(), product.getPrice());
     }
 
-    public void getProduct(String code) {
-        System.out.println("Getting product with code: " + code);
+    public RegisterProductsDto getProduct(Long code) {
+
+        var searchProduct = productRepository.findById(code);
+
+        if (searchProduct == null) {
+            return null;
+        }
+
+        return new RegisterProductsDto(searchProduct.getName(), searchProduct.getPrice());
     }
 
-    public void updateProduct(String code, String name, double price) {
-        System.out.println("Product updated: " + code + ", " + name + ", " + price);
+    public List<RegisterProductsDto> getAllProducts(int page, int size) {
+        return productRepository.findAll()
+            .page(Page.of(page, size))
+            .stream()
+            .map(entity -> new RegisterProductsDto(
+                entity.getName(),
+                entity.getPrice()
+            ))
+            .toList();
     }
 }
