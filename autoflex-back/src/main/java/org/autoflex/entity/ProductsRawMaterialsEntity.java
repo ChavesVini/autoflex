@@ -20,8 +20,8 @@ public class ProductsRawMaterialsEntity extends PanacheEntity {
     @Column(name ="product_id")
     private Integer productId;
     
-    @Column(name ="raw_materials_id")
-    private Integer rawMaterialsId;
+    @Column(name ="raw_material_id")
+    private Integer rawMaterialId;
 
     @Column(name ="quantity")
     private Integer quantity;

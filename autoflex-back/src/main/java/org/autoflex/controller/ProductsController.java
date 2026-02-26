@@ -70,7 +70,6 @@ public class ProductsController {
         @PathParam("id") Long code,
         @Valid ProductsDto updateProductsDto
     ) {
-        System.out.println("Updating product with ID: " + code);
         var products = productsService.updateProduct(updateProductsDto, code);
 
         if (products == null) {

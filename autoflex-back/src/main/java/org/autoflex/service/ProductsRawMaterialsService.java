@@ -24,14 +24,14 @@ public class ProductsRawMaterialsService {
 
         var productAndRawMaterial = new ProductsRawMaterialsEntity();
         productAndRawMaterial.setProductId(request.productId());
-        productAndRawMaterial.setRawMaterialsId(request.rawMaterialsId());
+        productAndRawMaterial.setRawMaterialId(request.rawMaterialId());
         productAndRawMaterial.setQuantity(request.quantity());
 
         productsRawMaterialsRepository.persist(productAndRawMaterial);
 
         return new ProductsRawMaterialsDto(
             productAndRawMaterial.getProductId(),
-            productAndRawMaterial.getRawMaterialsId(),
+            productAndRawMaterial.getRawMaterialId(),
             productAndRawMaterial.getQuantity()
         );
     }
@@ -69,8 +69,8 @@ public class ProductsRawMaterialsService {
             hasUpdates = true;
         } 
         
-        if (update.rawMaterialsId() != null) {
-            updateProduct.setRawMaterialsId(update.rawMaterialsId());
+        if (update.rawMaterialId() != null) {
+            updateProduct.setRawMaterialId(update.rawMaterialId());
             hasUpdates = true;
         } 
         

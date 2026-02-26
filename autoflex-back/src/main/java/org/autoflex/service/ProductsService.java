@@ -52,9 +52,7 @@ public class ProductsService {
     }
 
     @Transactional        
-    public ProductsEntity updateProduct(ProductsDto update, Long code) {
-        System.out.println("Updating product with ID: " + code);
-        System.out.println("Updating product with ID: " + update);       
+    public ProductsEntity updateProduct(ProductsDto update, Long code) { 
         var updateProduct = productRepository.findById(code);
 
         if (updateProduct == null) {
