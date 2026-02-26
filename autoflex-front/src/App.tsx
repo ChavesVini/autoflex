@@ -1,9 +1,10 @@
 import './App.css'
-import Products from './pages/productsPage/Products'
+import RawMaterials from './pages/rawMaterialsPage/RawMaterials'
 
 function App() {
   return (
-    <Products />
+    <RawMaterials
+    />
   )
 }
 

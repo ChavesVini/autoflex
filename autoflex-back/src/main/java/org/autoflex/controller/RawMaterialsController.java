@@ -60,7 +60,7 @@ public class RawMaterialsController {
     ) {
         var products = rawMaterialsService.getAllRawMaterials(page, size);
 
-        if (products == null || products.isEmpty()) {
+        if (products == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

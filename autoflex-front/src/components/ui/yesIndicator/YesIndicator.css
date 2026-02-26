@@ -1,0 +1,10 @@
+.yes-indicator-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 250px;
+}
+
+.yes-indicator-text {
+  color: #4CAF50;
+}

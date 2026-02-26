@@ -1,8 +1,9 @@
 package org.autoflex.service;
 
-import java.util.Set;
+import java.util.List;
 
 import org.autoflex.entity.ProductsEntity;
+import org.autoflex.entity.dto.PageResponseDto;
 import org.autoflex.entity.dto.ProductsDto;
 import org.autoflex.exception.exceptions.EmptyUpdateRequestException;
 import org.autoflex.exception.exceptions.NoSuchElementException;
@@ -11,6 +12,9 @@ import org.autoflex.repository.ProductsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class ProductsService {
@@ -44,11 +48,19 @@ public class ProductsService {
         return product;
     }
 
-    public Set<ProductsEntity> getAllProducts(int page, int size) {
-        return productRepository.findAll().stream()
-                .skip((long) page * size)
-                .limit(size)
-                .collect(java.util.stream.Collectors.toSet());
+    public PageResponseDto<ProductsEntity> getAllProducts(Integer page, Integer size) {
+
+        var query = productRepository.findAll(Sort.by("id"));
+
+        Long total = query.count();
+
+        List<ProductsEntity> products = query
+                .page(Page.of(page, size))
+                .list();
+
+        Integer totalPages = (int) Math.ceil((double) total / size);
+
+        return new PageResponseDto<ProductsEntity>(products, total, page, size, totalPages);
     }
 
     @Transactional        

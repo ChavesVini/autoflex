@@ -55,7 +55,7 @@ public class ProductsController {
     ) {
         var products = productsService.getAllProducts(page, size);
 
-        if (products == null || products.isEmpty()) {
+        if (products == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

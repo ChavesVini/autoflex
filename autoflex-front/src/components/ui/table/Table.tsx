@@ -1,34 +1,41 @@
 import "./Table.css";
 
-interface TableProps {
-  headers: string[];
-  data: string[][];
+interface Column {
+  header: string;
+  accessor: string;
 }
 
-export function Table({ headers, data }: TableProps) {
+interface TableProps<T> {
+  columns: Column[];
+  data: T[];
+}
+
+export function Table<T extends Record<string, any>>({
+  columns,
+  data,
+}: TableProps<T>) {
   return (
     <div className="table-card">
       <table className="custom-table">
         <thead>
           <tr>
-            {headers.map((header, index) => (
-              <th key={index}>{header}</th>
+            {columns.map((col) => (
+              <th key={col.accessor}>{col.header}</th>
             ))}
           </tr>
         </thead>
-
         <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+          {data.map((row, index) => (
+            <tr key={index}>
+              {columns.map((col) => (
+                <td key={col.accessor}>{row[col.accessor]}</td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
-}
+    );
+  }
 
 export default Table;

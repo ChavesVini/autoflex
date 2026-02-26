@@ -1,0 +1,10 @@
+.no-indicator-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 250px;
+}
+
+.no-indicator-text {
+  color: #E00000;
+}
