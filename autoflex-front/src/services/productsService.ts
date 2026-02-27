@@ -1,4 +1,4 @@
-import type { PageResponseDto } from "../type/PageResponseDto";
+import type { PageResponseDto } from "../types/PageResponseDto";
 import { api } from "./api";
 
 export interface Products {
@@ -7,8 +7,19 @@ export interface Products {
   price: number;
 }
 
-export const getAllProducts = async (page: number, size: number): Promise<PageResponseDto<Products>> => {
-  const response = await api.get(`/product/get-all?page=${page}&size=${size}`);
+export const getAllProducts = async (
+  page: number,
+  size: number,
+  search?: string
+): Promise<PageResponseDto<Products>> => {
+
+  let url = `/product/get-all?page=${page}&size=${size}`;
+
+  if (search && search.trim() !== "") {
+    url += `&name=${encodeURIComponent(search)}`;
+  }
+
+  const response = await api.get(url);
   return response.data;
 };
 

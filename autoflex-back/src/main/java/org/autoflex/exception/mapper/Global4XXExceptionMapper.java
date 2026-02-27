@@ -4,6 +4,7 @@ import org.autoflex.exception.exceptions.NoMoreElementsAvailableException;
 import org.autoflex.exception.exceptions.NoSuchElementException;
 import org.autoflex.exception.exceptions.ProductAlreadyExistsException;
 import org.autoflex.exception.exceptions.RawMaterialAlreadyExistsException;
+import org.autoflex.exception.exceptions.RawMaterialInUseException;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -24,7 +25,8 @@ public class Global4XXExceptionMapper
         }
 
         if (exception instanceof ProductAlreadyExistsException
-            || exception instanceof RawMaterialAlreadyExistsException) {
+            || exception instanceof RawMaterialAlreadyExistsException
+            || exception instanceof RawMaterialInUseException) {
             return Response.status(Response.Status.CONFLICT)
                     .entity(exception.getMessage())
                     .build();

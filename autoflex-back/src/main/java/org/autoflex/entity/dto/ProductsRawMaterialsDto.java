@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Positive;
 
 public record ProductsRawMaterialsDto(
     @NotNull(message = "ProductId é obrigatório")
-    Integer productId,
+    Long productId,
 
     @NotNull(message = "RawMaterialId é obrigatório")
-    Integer rawMaterialId,
+    Long rawMaterialId,
 
     @NotNull(message = "Quantidade é obrigatório")
     @Positive(message = "Quantidade deve ser maior que zero")

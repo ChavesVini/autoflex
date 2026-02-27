@@ -1,6 +1,7 @@
 package org.autoflex.controller;
 
 import org.autoflex.entity.dto.ProductsDto;
+import org.autoflex.service.ProductsRawMaterialsService;
 import org.autoflex.service.ProductsService;
 
 import jakarta.inject.Inject;
@@ -20,10 +21,12 @@ import jakarta.ws.rs.PathParam;
 @Path("/product")
 public class ProductsController {
     private final ProductsService productsService;
+    private final ProductsRawMaterialsService productsRawMaterialsService;
 
     @Inject
-    public ProductsController(ProductsService productsService) {
+    public ProductsController(ProductsService productsService, ProductsRawMaterialsService productsRawMaterialsService) {
         this.productsService = productsService;
+        this.productsRawMaterialsService = productsRawMaterialsService;
     }
 
     @POST
@@ -49,15 +52,12 @@ public class ProductsController {
     @GET
     @Path("/get-all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProducts(
-        @QueryParam("page") int page,
-        @QueryParam("size") int size
+    public Response getProducts(
+            @QueryParam("name") String name,
+            @QueryParam("page") Integer page,
+            @QueryParam("size") Integer size
     ) {
-        var products = productsService.getAllProducts(page, size);
-
-        if (products == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        var products = productsService.getProducts(name, page, size);
 
         return Response.ok(products).build();
     }
@@ -85,6 +85,8 @@ public class ProductsController {
     public Response deleteProduct(
         @PathParam("id") Long code
     ) {
+        productsRawMaterialsService.validateProductIsNotAssociated(code);
+        
         productsService.deleteProduct(code);
 
         return Response.noContent().build();

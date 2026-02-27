@@ -12,14 +12,15 @@ import org.autoflex.repository.ProductsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 public class ProductsService {
     private final ProductsRepository productRepository;
-    
+    private PanacheQuery<ProductsEntity> query;
+
     @Inject
     public ProductsService(ProductsRepository productRepository) {
         this.productRepository = productRepository;
@@ -46,6 +47,41 @@ public class ProductsService {
         }
 
         return product;
+    }
+
+    public PageResponseDto<ProductsEntity> getProducts(
+            String name,
+            Integer page,
+            Integer size
+    ) {
+
+        String formatted = name == null ? "" : name.trim();
+
+        if (formatted == null || formatted.isBlank()) {
+            query = productRepository.findAll(Sort.by("id"));
+        } else {
+            query = productRepository.find(
+                    "LOWER(name) LIKE LOWER(?1)",
+                    Sort.by("id"),
+                    "%" + formatted + "%"
+            );
+        }
+
+        Long total = query.count();
+
+        List<ProductsEntity> products = query
+                .page(Page.of(page, size))
+                .list();
+
+        Integer totalPages = (int) Math.ceil((double) total / size);
+
+        return new PageResponseDto<>(
+                products,
+                total,
+                page,
+                size,
+                totalPages
+        );
     }
 
     public PageResponseDto<ProductsEntity> getAllProducts(Integer page, Integer size) {

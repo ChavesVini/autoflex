@@ -1,12 +1,13 @@
 import "./Table.css";
 
-interface Column {
+interface Column<T> {
   header: string;
   accessor: string;
+  cell?: (value: any, row: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
-  columns: Column[];
+  columns: Column<T>[];
   data: T[];
 }
 
@@ -28,7 +29,11 @@ export function Table<T extends Record<string, any>>({
           {data.map((row, index) => (
             <tr key={index}>
               {columns.map((col) => (
-                <td key={col.accessor}>{row[col.accessor]}</td>
+                <td key={col.accessor}>
+                  {col.cell
+                    ? col.cell(row[col.accessor], row)
+                    : row[col.accessor]}
+                </td>
               ))}
             </tr>
           ))}

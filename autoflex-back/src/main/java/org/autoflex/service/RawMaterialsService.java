@@ -19,10 +19,12 @@ import io.quarkus.panache.common.Sort;
 @ApplicationScoped
 public class RawMaterialsService {
     private final RawMaterialsRepository rawMaterialsRepository;
+    private final ProductsRawMaterialsService productsRawMaterialsService;
     
     @Inject
-    public RawMaterialsService(RawMaterialsRepository rawMaterialsRepository) {
+    public RawMaterialsService(RawMaterialsRepository rawMaterialsRepository, ProductsRawMaterialsService productsRawMaterialsService) {
         this.rawMaterialsRepository = rawMaterialsRepository;
+        this.productsRawMaterialsService = productsRawMaterialsService;
     }
     
     @Transactional
@@ -96,7 +98,9 @@ public class RawMaterialsService {
     @Transactional
     public void deleteRawMaterial(Long code) {
         var rawMaterial = rawMaterialsRepository.findById(code);
-
+        
+        productsRawMaterialsService.validateRawMaterialIsNotAssociated(code);
+        
         if (rawMaterial == null) {
             throw new NoSuchElementException("O material não existe!");
         }

@@ -1,4 +1,4 @@
-import type { PageResponseDto } from "../type/PageResponseDto";
+import type { PageResponseDto } from "../types/PageResponseDto";
 import { api } from "./api";
 
 export interface RawMaterial {
