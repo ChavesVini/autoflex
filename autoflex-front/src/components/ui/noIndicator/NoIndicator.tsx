@@ -1,18 +1,16 @@
 import { IconContext } from "react-icons";
 import "./NoIndicator.css";
-import { FcCancel } from "react-icons/fc";
+import { MdCancel } from "react-icons/md";
 
 export function NoIndicator() {
   return (
     <div className="no-indicator-container">
-        <IconContext.Provider
-            value={{size: '20px' }}
-        >
-        <div>
-            <FcCancel className="no-indicator-icon"/>
-        </div>
-        </IconContext.Provider>
-        <p className="no-indicator-text"> No </p>
+      <IconContext.Provider
+        value={{size: '20px' }}
+      >
+      <MdCancel className="no-indicator-icon"/>
+      </IconContext.Provider>
+      <p className="no-indicator-text"> No </p>
     </div>
   );
 }

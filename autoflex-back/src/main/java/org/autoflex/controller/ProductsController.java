@@ -1,6 +1,6 @@
 package org.autoflex.controller;
 
-import org.autoflex.entity.dto.ProductsDto;
+import org.autoflex.entity.dto.ProductsUpdateDto;
 import org.autoflex.service.ProductsRawMaterialsService;
 import org.autoflex.service.ProductsService;
 
@@ -34,7 +34,7 @@ public class ProductsController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response registerProduct(@Valid ProductsDto registerProductsDto) {
+    public Response registerProduct(@Valid ProductsUpdateDto registerProductsDto) {
         var createdProduct = productsService.registerProduct(registerProductsDto);
         return Response.status(Response.Status.CREATED)
         .entity(createdProduct)
@@ -57,7 +57,11 @@ public class ProductsController {
             @QueryParam("page") Integer page,
             @QueryParam("size") Integer size
     ) {
-        var products = productsService.getProducts(name, page, size);
+        var products = productsService.getAllProducts(name, page, size);
+
+        if (products == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         return Response.ok(products).build();
     }
@@ -68,7 +72,7 @@ public class ProductsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProduct(
         @PathParam("id") Long code,
-        @Valid ProductsDto updateProductsDto
+        @Valid ProductsUpdateDto updateProductsDto
     ) {
         var products = productsService.updateProduct(updateProductsDto, code);
 

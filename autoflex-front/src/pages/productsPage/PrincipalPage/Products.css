@@ -1,0 +1,191 @@
+.container-product-area {
+  display: flex;
+  height: 100dvh;
+  width: 100dvw;
+  background: #f1f5f9;
+  font-family: 'Inter', sans-serif;
+}
+
+.edit-input {
+  width: 80px;
+  padding: 4px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 14px;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.edit-input:focus {
+  border-color: #4CAF50;
+}
+
+.product-area {
+  flex: 1;
+  padding: 40px;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.product-area h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+  flex: 1;
+}
+
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-area > button {
+  margin: 16px 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  text-align: center;
+  color: #000000;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  text-align: center;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #475569;
+}
+
+td {
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+tr:hover {
+  background: #f1f5f9;
+}
+
+.edit-input {
+  padding: 6px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.pagination button {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.pagination button:hover {
+  opacity: 0.9;
+}
+
+.production-card {
+  margin-top: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  width: 600px;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.edit-input::-webkit-outer-spin-button,
+.edit-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.edit-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.check-icon {
+  color: #4CAF50;
+}
+
+.cancel-icon {
+  color: #E00000;
+}
+
+.side-bar {
+  width: 220px;
+  background: linear-gradient(180deg, #1e293b, #334155);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+}
+
+.button-create button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 10px 10px;
+  height: auto;  
+}
+
+.side-bar button {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.count-text {
+  color: #000000;
+  text-align: center;
+}

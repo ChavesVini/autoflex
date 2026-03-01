@@ -1,7 +1,7 @@
 package org.autoflex.entity.dto;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public record ProductsRawMaterialsDto(
     @NotNull(message = "ProductId é obrigatório")
@@ -11,7 +11,7 @@ public record ProductsRawMaterialsDto(
     Long rawMaterialId,
 
     @NotNull(message = "Quantidade é obrigatório")
-    @Positive(message = "Quantidade deve ser maior que zero")
+    @PositiveOrZero(message = "Quantidade deve ser maior que -1")
     Integer quantity
 ) {
 }

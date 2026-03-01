@@ -1,6 +1,6 @@
 package org.autoflex.controller;
 
-import org.autoflex.entity.dto.RawMaterialsDto;
+import org.autoflex.entity.dto.RawMaterialsUpdateDto;
 import org.autoflex.service.RawMaterialsService;
 
 import jakarta.inject.Inject;
@@ -31,7 +31,7 @@ public class RawMaterialsController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response registerRawMaterial(@Valid RawMaterialsDto registerRawMaterialsDto) {
+    public Response registerRawMaterial(@Valid RawMaterialsUpdateDto registerRawMaterialsDto) {
         var createdProduct = rawMaterialsService.registerRawMaterial(registerRawMaterialsDto);
         return Response.status(Response.Status.CREATED)
         .entity(createdProduct)
@@ -41,7 +41,7 @@ public class RawMaterialsController {
     @GET
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProduct(@PathParam("id") Long code) {
+    public Response getRawMaterials(@PathParam("id") Long code) {
         var product = rawMaterialsService.getRawMaterial(code);
 
         if (product == null) {
@@ -54,11 +54,12 @@ public class RawMaterialsController {
     @GET
     @Path("/get-all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProducts(
-        @QueryParam("page") int page,
-        @QueryParam("size") int size
+    public Response getAllRawMaterials(
+        @QueryParam("name") String name,
+        @QueryParam("page") Integer page,
+        @QueryParam("size") Integer size
     ) {
-        var products = rawMaterialsService.getAllRawMaterials(page, size);
+        var products = rawMaterialsService.getAllRawMaterials(name, page, size);
 
         if (products == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -73,8 +74,10 @@ public class RawMaterialsController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProduct(
         @PathParam("id") Long code,
-        @Valid RawMaterialsDto updateRawMaterialsDto
+        @Valid RawMaterialsUpdateDto updateRawMaterialsDto
     ) {
+
+        System.out.println(updateRawMaterialsDto);
         var products = rawMaterialsService.updateRawMaterial(updateRawMaterialsDto, code);
 
         if (products == null) {

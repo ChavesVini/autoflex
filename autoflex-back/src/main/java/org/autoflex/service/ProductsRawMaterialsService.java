@@ -1,13 +1,17 @@
 package org.autoflex.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.autoflex.entity.ProductsEntity;
 import org.autoflex.entity.ProductsRawMaterialsEntity;
 import org.autoflex.entity.RawMaterialsEntity;
 import org.autoflex.entity.dto.PageResponseDto;
 import org.autoflex.entity.dto.ProductProductionDto;
+import org.autoflex.entity.dto.ProductRawMaterialNamesDto;
 import org.autoflex.entity.dto.ProductsRawMaterialsDto;
 import org.autoflex.exception.exceptions.EmptyUpdateRequestException;
 import org.autoflex.exception.exceptions.NoSuchElementException;
@@ -28,7 +32,7 @@ public class ProductsRawMaterialsService {
     private final ProductsRawMaterialsRepository productsRawMaterialsRepository;
     private final RawMaterialsRepository rawMaterialsRepository;
     private final ProductsRepository productsRepository;
-    
+
     @Inject
     public ProductsRawMaterialsService(
         ProductsRawMaterialsRepository productsRawMaterialsRepository, 
@@ -245,5 +249,61 @@ public class ProductsRawMaterialsService {
         }
 
         return possible == Integer.MAX_VALUE ? 0 : possible;
+    }
+
+    @Inject
+    ProductsRawMaterialsRepository repository;
+
+    public List<ProductRawMaterialNamesDto> findMaterialsByProductId(Long productId) {
+        return repository.findByProductId(productId);
+    }
+
+    @Transactional
+    public void updateProductMaterials(Long productId, List<ProductRawMaterialNamesDto> materials) {
+
+        ProductsEntity product = ProductsEntity.findById(productId);
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+
+        // associações atuais do banco
+        List<ProductsRawMaterialsEntity> existing =
+                repository.findEntitiesByProductId(productId);
+                        // transforma em mapa para facilitar busca
+        Map<Long, ProductsRawMaterialsEntity> existingMap =
+                existing.stream()
+                        .collect(Collectors.toMap(
+                                e -> e.getRawMaterial().id,
+                                Function.identity()
+                        ));
+                            
+        for (ProductRawMaterialNamesDto dto : materials) {
+
+            ProductsRawMaterialsEntity entity =
+                    existingMap.get(dto.rawMaterialId());
+
+            if (entity != null) {
+                // já existe → apenas atualiza quantidade
+                entity.setQuantity(dto.quantity());
+                existingMap.remove(dto.rawMaterialId());
+            } else {
+                // não existe → cria novo
+                RawMaterialsEntity raw =
+                        RawMaterialsEntity.findById(dto.rawMaterialId());
+
+                ProductsRawMaterialsEntity newEntity =
+                        new ProductsRawMaterialsEntity();
+                newEntity.setProduct(product);
+                newEntity.setRawMaterial(raw);
+                newEntity.setQuantity(dto.quantity());
+
+                repository.persist(newEntity);
+            }
+        }
+
+        // o que sobrou no mapa não veio do frontend → remove
+        for (ProductsRawMaterialsEntity toRemove : existingMap.values()) {
+            repository.delete(toRemove);
+        }
     }
 }

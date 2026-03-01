@@ -13,6 +13,7 @@ export function SearchInput({ value, onChange, onSearch }: SearchInputProps) {
     <div className="search-container">
       <FaSearch className="search-icon" onClick={onSearch} />
       <input
+        className="search-input"
         type="text"
         placeholder="Search..."
         value={value}

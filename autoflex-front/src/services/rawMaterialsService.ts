@@ -7,8 +7,19 @@ export interface RawMaterial {
   quantity: number;
 }
 
-export const getAllRawMaterials = async (page: number, size: number): Promise<PageResponseDto<RawMaterial>> => {
-  const response = await api.get(`/raw-material/get-all?page=${page}&size=${size}`);
+export const getAllRawMaterials = async (
+  page: number,
+  size: number,
+  search?: string
+): Promise<PageResponseDto<RawMaterial>> => {
+
+  let url = `/raw-material/get-all?page=${page}&size=${size}`;
+
+  if (search && search.trim() !== "") {
+    url += `&name=${encodeURIComponent(search)}`;
+  }
+
+  const response = await api.get(url);
   return response.data;
 };
 

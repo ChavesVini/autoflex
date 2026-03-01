@@ -24,3 +24,33 @@
 .edit-input[type=number] {
   -moz-appearance: textfield;
 }
+
+.count-text {
+  color: #000000;
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.pagination button {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.pagination button:hover {
+  opacity: 0.9;
+}
+
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}

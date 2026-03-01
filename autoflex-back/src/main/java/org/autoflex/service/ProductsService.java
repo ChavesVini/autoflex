@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.autoflex.entity.ProductsEntity;
 import org.autoflex.entity.dto.PageResponseDto;
-import org.autoflex.entity.dto.ProductsDto;
+import org.autoflex.entity.dto.ProductsResponseDto;
+import org.autoflex.entity.dto.ProductsUpdateDto;
 import org.autoflex.exception.exceptions.EmptyUpdateRequestException;
 import org.autoflex.exception.exceptions.NoSuchElementException;
 import org.autoflex.repository.ProductsRepository;
@@ -27,7 +28,7 @@ public class ProductsService {
     }
     
     @Transactional
-    public ProductsDto registerProduct(ProductsDto request) {
+    public ProductsResponseDto registerProduct(ProductsUpdateDto request) {
 
         var product = new ProductsEntity();
         product.setName(request.name());
@@ -35,7 +36,7 @@ public class ProductsService {
 
         productRepository.persist(product);
 
-        return new ProductsDto(product.getName(), product.getPrice());
+        return new ProductsResponseDto(product.id, product.getName(), product.getPrice());
     }
 
     public ProductsEntity getProduct(Long code) {
@@ -49,7 +50,7 @@ public class ProductsService {
         return product;
     }
 
-    public PageResponseDto<ProductsEntity> getProducts(
+    public PageResponseDto<ProductsEntity> getAllProducts(
             String name,
             Integer page,
             Integer size
@@ -58,11 +59,11 @@ public class ProductsService {
         String formatted = name == null ? "" : name.trim();
 
         if (formatted == null || formatted.isBlank()) {
-            query = productRepository.findAll(Sort.by("id"));
+            query = productRepository.findAll(Sort.descending("price"));
         } else {
             query = productRepository.find(
                     "LOWER(name) LIKE LOWER(?1)",
-                    Sort.by("id"),
+                    Sort.by("price"),
                     "%" + formatted + "%"
             );
         }
@@ -84,23 +85,8 @@ public class ProductsService {
         );
     }
 
-    public PageResponseDto<ProductsEntity> getAllProducts(Integer page, Integer size) {
-
-        var query = productRepository.findAll(Sort.by("id"));
-
-        Long total = query.count();
-
-        List<ProductsEntity> products = query
-                .page(Page.of(page, size))
-                .list();
-
-        Integer totalPages = (int) Math.ceil((double) total / size);
-
-        return new PageResponseDto<ProductsEntity>(products, total, page, size, totalPages);
-    }
-
     @Transactional        
-    public ProductsEntity updateProduct(ProductsDto update, Long code) { 
+    public ProductsResponseDto updateProduct(ProductsUpdateDto update, Long code) { 
         var updateProduct = productRepository.findById(code);
 
         if (updateProduct == null) {
@@ -123,9 +109,11 @@ public class ProductsService {
             throw new EmptyUpdateRequestException("Nenhum campo para atualizar foi fornecido.");
         }
 
-        productRepository.persist(updateProduct);
-
-        return updateProduct;
+        return new ProductsResponseDto(
+            code,
+            updateProduct.getName(),
+            updateProduct.getPrice()
+        );
     }
 
     @Transactional

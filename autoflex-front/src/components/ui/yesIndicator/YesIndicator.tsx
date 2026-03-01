@@ -8,9 +8,7 @@ export function YesIndicator() {
       <IconContext.Provider
         value={{size: '20px' }}
       >
-      <div>
-        <FcOk className="yes-indicator-icon"/>
-      </div>
+      <FcOk className="yes-indicator-icon"/>
       </IconContext.Provider>
       <p className="yes-indicator-text"> Yes </p>
     </div>

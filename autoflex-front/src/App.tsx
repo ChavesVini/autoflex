@@ -1,7 +1,9 @@
 import './App.css'
 import { Slide, ToastContainer } from "react-toastify";
-import RawMaterials from './pages/rawMaterialsPage/RawMaterials'
-import Products from './pages/productsPage/Products';
+import RawMaterials from './pages/rawMaterialsPage/PrincipalPage/RawMaterials'
+import Products from './pages/productsPage/PrincipalPage/Products';
+import { StrictMode } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
@@ -19,9 +21,13 @@ function App() {
         theme="dark"
         transition={Slide}
       />
-    <Products
-    />
-  </>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Products />} />
+          <Route path="/raw-materials" element={<RawMaterials />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   )
 }
 

@@ -1,8 +1,8 @@
 .yes-indicator-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  width: 250px;
 }
 
 .yes-indicator-text {
