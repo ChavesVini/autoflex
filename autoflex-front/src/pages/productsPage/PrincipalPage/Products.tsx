@@ -13,26 +13,30 @@ import YesIndicator from "../../../components/ui/yesIndicator/YesIndicator";
 import NoIndicator from "../../../components/ui/noIndicator/NoIndicator";
 import { useNavigate } from "react-router";
 import PlusIndicator from "../../../components/ui/plusIndicator/plusIndication";
-import DetailsProductPage from "../../detailsProductPage/DetailsProductPage";
+
 import ProductModal from "../ModalPage/ProductModal";
+import EditProductPage from "../../editProductPage/EditProductPage";
 
 function Products() {  
   const [products, setProducts] = useState<Product[]>([]);
   const [count, setCount] = useState<number>(0);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [production, setProduction] = useState<Product[]>([]);
-  const [search, setSearch] = useState("");
   const [searchProduction, setSearchProduction] = useState("");
   const [countProduction, setCountProduction] = useState<number>(0);
   const [pageProducts, setPageProducts] = useState<number>(0);
   const [pageProduction, setPageProduction] = useState<number>(0);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [appliedSearchProducts, setAppliedSearchProducts] = useState("");
+  const [appliedSearchProduction, setAppliedSearchProduction] = useState("");
   const size = 5;
 
   const navigate = useNavigate();
   
-  const totalPages = Math.ceil(count / size);
+  const totalPagesProducts = Math.ceil(count / size);
+  const totalPagesProduction = Math.ceil(countProduction / size);
   
   async function loadData(searchText?: string, where?: "products" | "production") {
     if (!where) {
@@ -135,12 +139,13 @@ function Products() {
     actions: renderActions(product),
   }));
 
+
   useEffect(() => {
-    loadData(search, "products");
+    loadData(appliedSearchProducts, "products");
   }, [pageProducts]);
 
   useEffect(() => {
-    loadData(searchProduction, "production");
+    loadData(appliedSearchProduction, "production");
   }, [pageProduction]);
 
   return ( 
@@ -153,9 +158,13 @@ function Products() {
         <h1>Products</h1>
         <div className="actions-header">
           <SearchInput
-            value={search}
-            onChange={setSearch}
-            onSearch={() => loadData(search, "products")}
+            value={searchTerm}
+            onChange={setSearchTerm}
+            onSearch={() => {
+              setAppliedSearchProducts(searchTerm);
+              setPageProducts(0);
+              loadData(searchTerm, "products");
+            }}
           />
           <div className="button-create">
             <Button
@@ -182,7 +191,7 @@ function Products() {
             {"<"}
           </Button>
 
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: totalPagesProducts }, (_, index) => (
             <Button
               key={index}
               onClick={() => setPageProducts(index)}
@@ -195,7 +204,7 @@ function Products() {
           ))}
 
           <Button
-            disabled={pageProducts === totalPages - 1}
+            disabled={pageProducts === totalPagesProducts - 1}
             onClick={() => setPageProducts(prev => prev + 1)} backgroundColor="#1e293b" color="white">
             {">"}
           </Button>
@@ -206,7 +215,11 @@ function Products() {
             <SearchInput
               value={searchProduction}
               onChange={setSearchProduction}
-              onSearch={() => loadData(searchProduction, "production")}
+              onSearch={() => {
+                setAppliedSearchProduction(searchProduction);
+                setPageProduction(0);
+                loadData(searchProduction, "production");
+              }}
             />
           </div>
           <Table   
@@ -217,7 +230,7 @@ function Products() {
             ]}
             data={production}
           />
-        <p className="count-text"> Showing {Math.min(pageProduction * size + tableData.length, count)} of {count} production possibilities.</p>
+        <p className="count-text"> Showing {Math.min(pageProduction * size + production.length, count)} of {count} production possibilities.</p>
 
         <div className="pagination">
           <Button
@@ -226,7 +239,7 @@ function Products() {
             {"<"}
           </Button>
 
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: totalPagesProduction }, (_, index) => (
             <Button
               key={index}
               onClick={() => setPageProduction(index)}
@@ -239,7 +252,7 @@ function Products() {
           ))}
 
           <Button
-            disabled={pageProduction === totalPages - 1}
+            disabled={pageProduction === totalPagesProduction - 1}
             onClick={() => setPageProduction(prev => prev + 1)} backgroundColor="#1e293b" color="white">
             {">"}
           </Button>
@@ -251,7 +264,7 @@ function Products() {
           />
 
           {selectedProduct && (
-            <DetailsProductPage
+            <EditProductPage
               product={selectedProduct}
               closeModal={() => setSelectedProduct(null)}
               onSave={(updatedValues) => {

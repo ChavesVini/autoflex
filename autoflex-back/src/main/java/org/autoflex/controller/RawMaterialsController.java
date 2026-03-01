@@ -76,8 +76,6 @@ public class RawMaterialsController {
         @PathParam("id") Long code,
         @Valid RawMaterialsUpdateDto updateRawMaterialsDto
     ) {
-
-        System.out.println(updateRawMaterialsDto);
         var products = rawMaterialsService.updateRawMaterial(updateRawMaterialsDto, code);
 
         if (products == null) {

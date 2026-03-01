@@ -102,9 +102,7 @@ public class RawMaterialsService {
         if (update.quantity() != null) {
             updateRawMaterial.setQuantity(update.quantity());
             hasUpdates = true;
-        } 
-        
-        System.out.println(update);
+        }
 
         if (!hasUpdates) {
             throw new EmptyUpdateRequestException("Nenhum campo para atualizar foi fornecido.");

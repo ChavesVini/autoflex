@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class ProductsRepository implements PanacheRepository<ProductsEntity> {
     public List<ProductsEntity> findByName(String text) {
         return find("LOWER(name) LIKE ?1",
-            "%" + text.toLowerCase() + "%")
+            "%" + text.toLowerCase().trim() + "%")
             .list();
     }
 }

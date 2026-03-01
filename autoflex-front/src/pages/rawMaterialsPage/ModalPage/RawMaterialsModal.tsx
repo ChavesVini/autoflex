@@ -4,7 +4,6 @@ import { createRawMaterial } from "../../../services/rawMaterialsService";
 import { toast } from "react-toastify";
 
 function RawMaterialsModal({
-  material,
   isOpen,
   onClose,
   onSuccess,
@@ -15,7 +14,7 @@ function RawMaterialsModal({
 
   const handleCreate = async () => {
     if (!name.trim() || quantity <= 0) {
-      toast.error("Preencha corretamente");
+      toast.error("Please fill in all fields correctly!");
       return;
     }
 
@@ -23,14 +22,14 @@ function RawMaterialsModal({
       setLoading(true);
       await createRawMaterial({ name, quantity });
 
-      toast.success("Matéria-prima criada!");
+      toast.success("Raw Material created!");
       onSuccess();
       onClose();
       setName("");
       setQuantity(0);
       
     } catch {
-      toast.error("Erro ao criar");
+      toast.error("Error when creating");
     } finally {
       setLoading(false);
     }

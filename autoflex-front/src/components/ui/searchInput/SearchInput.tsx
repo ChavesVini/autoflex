@@ -1,4 +1,3 @@
-import { Button } from "../button/Button";
 import "./SearchInput.css";
 import { FaSearch } from "react-icons/fa";
 

@@ -46,7 +46,5 @@ export const syncProductMaterials = async (
     quantity: m.quantity
   }));
 
-  console.log(payload)
-
   await api.put(`/product-raw-materials/product/${productId}/sync`, payload);
 };

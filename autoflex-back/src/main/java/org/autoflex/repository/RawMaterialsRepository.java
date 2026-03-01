@@ -11,7 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class RawMaterialsRepository implements PanacheRepository<RawMaterialsEntity> {
     public List<RawMaterialsEntity> findByName(String text) {
         return find("LOWER(name) LIKE ?1",
-            "%" + text.toLowerCase() + "%")
+            "%" + text.toLowerCase().trim() + "%")
             .list();
     }
 }

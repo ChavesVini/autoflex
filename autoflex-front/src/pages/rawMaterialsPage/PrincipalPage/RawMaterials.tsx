@@ -26,6 +26,7 @@ function RawMaterials() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const size = 5;
 
@@ -190,7 +191,7 @@ function RawMaterials() {
   }
 
   useEffect(() => {
-    loadData(search);
+    loadData(appliedSearch);
   }, [page]);
 
   return ( 
@@ -202,11 +203,15 @@ function RawMaterials() {
       <div className="product-area">
         <h1>Raw Materials</h1>
         <div className="actions-header">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            onSearch={() => loadData(search)}
-          />
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          onSearch={() => {
+            setAppliedSearch(search);
+            setPage(0);
+            loadData(search);
+          }}
+        />
 
           <div className="button-create">
             <Button

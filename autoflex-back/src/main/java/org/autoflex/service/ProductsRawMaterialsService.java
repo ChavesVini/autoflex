@@ -239,7 +239,6 @@ public class ProductsRawMaterialsService {
         int possible = Integer.MAX_VALUE;
 
         for (ProductsRawMaterialsEntity rel : product.getRawMaterial()) {
-            System.out.println("Relação: " + rel.getRawMaterial().toString());
 
             int stock = rel.getRawMaterial().getQuantity();
             int required = rel.getQuantity();
@@ -266,10 +265,8 @@ public class ProductsRawMaterialsService {
             throw new RuntimeException("Product not found");
         }
 
-        // associações atuais do banco
         List<ProductsRawMaterialsEntity> existing =
                 repository.findEntitiesByProductId(productId);
-                        // transforma em mapa para facilitar busca
         Map<Long, ProductsRawMaterialsEntity> existingMap =
                 existing.stream()
                         .collect(Collectors.toMap(
@@ -283,11 +280,9 @@ public class ProductsRawMaterialsService {
                     existingMap.get(dto.rawMaterialId());
 
             if (entity != null) {
-                // já existe → apenas atualiza quantidade
                 entity.setQuantity(dto.quantity());
                 existingMap.remove(dto.rawMaterialId());
             } else {
-                // não existe → cria novo
                 RawMaterialsEntity raw =
                         RawMaterialsEntity.findById(dto.rawMaterialId());
 
@@ -301,7 +296,6 @@ public class ProductsRawMaterialsService {
             }
         }
 
-        // o que sobrou no mapa não veio do frontend → remove
         for (ProductsRawMaterialsEntity toRemove : existingMap.values()) {
             repository.delete(toRemove);
         }

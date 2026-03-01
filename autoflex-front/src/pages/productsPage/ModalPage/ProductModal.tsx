@@ -20,7 +20,7 @@ function ProductModal({
 
   const handleCreate = async () => {
     if (!name.trim() || price <= 0) {
-      toast.error("Preencha corretamente");
+      toast.error("Please fill in all fields correctly!");
       return;
     }
 
@@ -28,13 +28,13 @@ function ProductModal({
       setLoading(true);
       await createProduct({ name, price });
 
-      toast.success("Produto criado!");
+      toast.success("Created Product!");
       onSuccess();
       onClose();
       setName("");
       setPrice(0);
     } catch {
-      toast.error("Erro ao criar");
+      toast.error("Error when creating the product!");
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,7 @@ function ProductModal({
 
   return (
     <ModalBase
-      title="Criar Produto"
+      title="Create Product"
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={handleCreate}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button/Button";
-import "./DetailsProductPage.css"; 
+import "./EditProductPage.css"; 
 import { toast } from 'react-toastify';
 import { TrashIndicator } from "../../components/ui/trashIndicator/TrashIndicator";
 import { getAllRawMaterials } from "../../services/rawMaterialsService";
@@ -8,6 +8,7 @@ import { getMaterialsByProduct, syncProductMaterials } from "../../services/prod
 import { FaCheck } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import { ImCross } from "react-icons/im";
+import Table from "../../components/ui/table/Table";
 
 interface EditProductPageProps {
   product: any;
@@ -17,6 +18,7 @@ interface EditProductPageProps {
 
 function EditProductPage({ product, closeModal, onSave }: EditProductPageProps) {
   const [name, setName] = useState(product.name);
+  const [price, setPrice] = useState(product.price);
   const [rawMaterials, setRawMaterials] = useState<any[]>([]);
   
   const [isAdding, setIsAdding] = useState(false);
@@ -38,7 +40,7 @@ function EditProductPage({ product, closeModal, onSave }: EditProductPageProps) 
   useEffect(() => {
     const fetchAll = async () => {
       const data = await getAllRawMaterials(0, 500); 
-      setAllAvailableMaterials(data.content || []);
+      setAllAvailableMaterials(data.content);
     };
     fetchAll();
   }, []);
@@ -79,7 +81,7 @@ function EditProductPage({ product, closeModal, onSave }: EditProductPageProps) 
       await syncProductMaterials(product.id, rawMaterials);
       
       toast.success("Product updated successfully!");
-      onSave({ ...product, name }); 
+      onSave({ ...product, name, price }); 
       closeModal();
     } catch (error) {
       toast.error("Failed to save materials");
@@ -90,9 +92,91 @@ function EditProductPage({ product, closeModal, onSave }: EditProductPageProps) 
     setRawMaterials(rawMaterials.filter(rm => rm.rawMaterialId !== rawMaterialId));
   };
 
+  const rawMaterialsTableData = [
+    ...rawMaterials.map((rm) => ({
+      rawMaterial: rm.rawMaterialName,
+      quantity: rm.quantity,
+      actions: (
+        <Button
+          onClick={() => removeMaterial(rm.rawMaterialId)}
+          backgroundColor="#FEE2E2"
+          color="white"
+        >
+          <TrashIndicator />
+        </Button>
+      ),
+    })),
+
+    ...(isAdding
+      ? [
+          {
+            rawMaterial: (
+              <select
+                className="modal-input"
+                value={newMaterial.rawMaterialId}
+                style={{ width: "100%" }}
+                onChange={(e) =>
+                  setNewMaterial({
+                    ...newMaterial,
+                    rawMaterialId: e.target.value,
+                  })
+                }
+              >
+                <option value="">Select</option>
+                {availableMaterials.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            ),
+            quantity: (
+              <input
+                type="number"
+                className="modal-input"
+                style={{ width: "80px" }}
+                value={newMaterial.quantity}
+                onChange={(e) =>
+                  setNewMaterial({
+                    ...newMaterial,
+                    quantity: Number(e.target.value),
+                  })
+                }
+              />
+            ),
+            actions: (
+              <div className="buttons-edit-raw-materials">
+                <Button
+                  title="Save"
+                  onClick={confirmAddMaterial}
+                  backgroundColor="#e2fee8"
+                  color="white"
+                >
+                  <IconContext.Provider value={{ size: "20px" }}>
+                    <FaCheck className="check-indicator-icon" />
+                  </IconContext.Provider>
+                </Button>
+
+                <Button
+                  title="Cancel"
+                  onClick={() => setIsAdding(false)}
+                  backgroundColor="#FEE2E2"
+                  color="white"
+                >
+                  <IconContext.Provider value={{ size: "20px" }}>
+                    <ImCross className="cancel-indicator-icon" />
+                  </IconContext.Provider>
+                </Button>
+              </div>
+            )
+          },
+        ]
+      : []),
+  ];
+
   return (
     <div className="overlay">
-      <div className="modal edit-modal">
+      <div className="edit-modal">
         <div className="modal-header">
           <h2>Edit Product: {product.name}</h2>
           <button className="close-x" onClick={closeModal}>✕</button>
@@ -109,84 +193,27 @@ function EditProductPage({ product, closeModal, onSave }: EditProductPageProps) 
             />
           </div>
 
+          <div className="form-group">
+            <label>Price</label>
+            <input 
+              type="number" 
+              value={price} 
+              onChange={(e) => setPrice(e.target.value)} 
+              className="modal-input"
+            />
+          </div>
+
           <div className="raw-materials-section">
             <h3>Raw Materials</h3>
-            <table className="inner-table">
-              <thead>
-                <tr>
-                  <th>Raw Material</th>
-                  <th>Quantity</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rawMaterials.map((rm) => (
-                  <tr key={rm.rawMaterialId}>
-                    <td>{rm.rawMaterialName}</td>
-                    <td>{rm.quantity}</td>
-                    <td className="inner-actions">
-                      <Button onClick={() => removeMaterial(rm.rawMaterialId)} backgroundColor={"#FEE2E2"} color={"white"}>
-                        <TrashIndicator />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
 
-                {isAdding && (
-                  <tr className="adding-row">
-                    <td>
-                      <select 
-                        className="modal-input"
-                        value={newMaterial.rawMaterialId}
-                        onChange={(e) => setNewMaterial({...newMaterial, rawMaterialId: e.target.value})}
-                      >
-                        <option value="">Select Material...</option>
-                        {availableMaterials.map(m => (
-                          <option key={m.id} value={m.id}>{m.name}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <input 
-                        type="number" 
-                        className="modal-input" 
-                        style={{ width: '80px' }}
-                        value={newMaterial.quantity}
-                        onChange={(e) => setNewMaterial({...newMaterial, quantity: Number(e.target.value)})}
-                      />
-                    </td>
-                    <td className="inner-actions">
-
-                      <Button
-                        title="Save"
-                        onClick={confirmAddMaterial}
-                        backgroundColor="#e2fee8"
-                        color="white"
-                      >
-                        <IconContext.Provider
-                          value={{size: '20px' }}
-                        >
-                          <FaCheck className="check-indicator-icon"/>
-                        </IconContext.Provider>     
-                      </Button>
-
-                      <Button
-                        title="Cancel"
-                        onClick={() => setIsAdding(false)}
-                        backgroundColor="#FEE2E2"
-                        color="white"
-                      >
-                        <IconContext.Provider
-                          value={{size: '20px' }}
-                        >
-                          <ImCross className="cancel-indicator-icon"/>
-                        </IconContext.Provider>   
-                      </Button>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <Table
+              columns={[
+                { header: "Raw Material", accessor: "rawMaterial" },
+                { header: "Quantity", accessor: "quantity" },
+                { header: "Actions", accessor: "actions" }
+              ]}
+            data={rawMaterialsTableData}
+            />
 
             {!isAdding && (
               <button className="add-material-btn" onClick={() => setIsAdding(true)}>

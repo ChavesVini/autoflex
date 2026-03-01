@@ -119,3 +119,9 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.buttons-edit-raw-materials {
+  display: "flex";
+  gap: "6px";
+  justify-content: "center";
+}
