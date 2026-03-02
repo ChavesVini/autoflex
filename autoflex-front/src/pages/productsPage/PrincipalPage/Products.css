@@ -40,9 +40,20 @@
 
 .actions-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.actions-right {
+  display: flex;
+  gap: 12px;
+}
+
+.clean-filters,
+.button-create {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
 }
 
 .product-area > button {
