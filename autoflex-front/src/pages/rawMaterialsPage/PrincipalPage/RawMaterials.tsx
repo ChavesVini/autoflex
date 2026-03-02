@@ -42,10 +42,10 @@ function RawMaterials() {
 
       await loadData();
 
+      toast.success("Raw material deleted successfully!");
+
     } catch (error: any) {
-
-      console.log(error.response.status);
-
+      
       if (error.response?.status === 409) {
         toast.error("This raw material is associated with products and cannot be deleted.");
         return;
@@ -190,6 +190,12 @@ function RawMaterials() {
     setCount(data.totalElements);
   }
 
+  async function cleanFilters() {
+    await loadData("");
+    setSearch("");
+    setAppliedSearch("");
+  }
+
   useEffect(() => {
     loadData(appliedSearch);
   }, [page]);
@@ -212,6 +218,13 @@ function RawMaterials() {
             loadData(search);
           }}
         />
+          <div className="actions-right">
+            <div className="clean-filters">
+              <Button
+                onClick={() => cleanFilters()} backgroundColor="#1e293b" color="white">
+                { "Clean Filter" }
+              </Button>
+            </div>
 
           <div className="button-create">
             <Button
@@ -219,6 +232,7 @@ function RawMaterials() {
               <PlusIndicator />{ "Create New Raw Material"}
             </Button>
           </div>
+        </div>
 
         </div>
         <Table

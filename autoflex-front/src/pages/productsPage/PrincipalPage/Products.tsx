@@ -139,6 +139,17 @@ function Products() {
     actions: renderActions(product),
   }));
 
+  async function cleanFilters(where?: "products" | "production") {
+    if (where === "products") {
+      await loadData("", "products");
+      setSearchTerm("");
+      setAppliedSearchProducts("");
+    } else if (where === "production") {
+      await loadData("", "production");
+      setSearchProduction("");
+      setAppliedSearchProduction("");
+    }
+  }
 
   useEffect(() => {
     loadData(appliedSearchProducts, "products");
@@ -166,11 +177,20 @@ function Products() {
               loadData(searchTerm, "products");
             }}
           />
-          <div className="button-create">
-            <Button
-              onClick={() => setIsModalOpen(true)} backgroundColor="#1e293b" color="white">
-              <PlusIndicator /> { "Create New Product" }
-            </Button>
+          <div className="actions-right">
+            <div className="clean-filters">
+              <Button
+                onClick={() => cleanFilters("products")} backgroundColor="#1e293b" color="white">
+                { "Clean Filter" }
+              </Button>
+            </div>
+
+            <div className="button-create">
+              <Button
+                onClick={() => setIsModalOpen(true)} backgroundColor="#1e293b" color="white">
+                <PlusIndicator /> { "Create New Product" }
+              </Button>
+            </div>
           </div>
         </div>
         <Table   
@@ -204,7 +224,7 @@ function Products() {
           ))}
 
           <Button
-            disabled={pageProducts === totalPagesProducts - 1}
+            disabled={(pageProducts === totalPagesProducts - 1) || (totalPagesProduction === 0)}
             onClick={() => setPageProducts(prev => prev + 1)} backgroundColor="#1e293b" color="white">
             {">"}
           </Button>
@@ -221,6 +241,12 @@ function Products() {
                 loadData(searchProduction, "production");
               }}
             />
+            <div className="clean-filters">
+              <Button
+                onClick={() => cleanFilters("products")} backgroundColor="#1e293b" color="white">
+                { "Clean Filter" }
+              </Button>
+            </div>
           </div>
           <Table   
             columns={[
@@ -230,7 +256,7 @@ function Products() {
             ]}
             data={production}
           />
-        <p className="count-text"> Showing {Math.min(pageProduction * size + production.length, count)} of {count} production possibilities.</p>
+        <p className="count-text"> Showing {Math.min(pageProduction * size + production.length, countProduction)} of {countProduction} production possibilities. </p>
 
         <div className="pagination">
           <Button
@@ -252,7 +278,7 @@ function Products() {
           ))}
 
           <Button
-            disabled={pageProduction === totalPagesProduction - 1}
+            disabled={(pageProduction === totalPagesProduction - 1) || (totalPagesProduction === 0)}
             onClick={() => setPageProduction(prev => prev + 1)} backgroundColor="#1e293b" color="white">
             {">"}
           </Button>
