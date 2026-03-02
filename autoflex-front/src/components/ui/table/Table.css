@@ -1,0 +1,76 @@
+.table-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  width: 100%;
+}
+
+.custom-table th,
+.custom-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-table {
+  width: 100%;
+  text-align: center;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+
+.custom-table thead {
+  background-color: #f5f7fa;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  height: 48px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-table th {
+  text-align: center;
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #4a5568;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.custom-table tr {
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #2d3748;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.custom-table td {
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #2d3748;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: 0.2s ease;
+}
+
+.actions-column {
+  width: 150px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}

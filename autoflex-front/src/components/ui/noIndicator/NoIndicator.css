@@ -1,0 +1,11 @@
+.no-indicator-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #E00000;
+}
+
+.no-indicator-text {
+  color: #E00000;
+}
