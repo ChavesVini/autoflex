@@ -1,14 +1,36 @@
 # Autoflex Project
+
 Hands-on backend technical project developed as part of a company assessment, focused on product and raw material management using Quarkus and Oracle.
 
+## Requirements
+
+Before running the project, make sure you have installed:
+
+* Docker
+* Docker Compose
+* Java 21 (or the version required by Quarkus)
+* Maven (if not using the wrapper)
+* Node.js (recommended LTS version)
+
 ## How to run the project
+
+### Database (Docker)
+
+The database and required services run inside Docker.
+
+Start the containers:
+
+```
+docker-compose up -d
+```
+
+If the container is already running, this command will have no effect.
 
 ### Backend (Quarkus)
 
 In the project root, run:
 
 ```
-docker-compose up -d
 ./mvnw quarkus:dev
 ```
 
@@ -19,8 +41,6 @@ API usually available at:
 ```
 http://localhost:8081
 ```
-
----
 
 ### Frontend (React)
 
@@ -42,55 +62,57 @@ Run the project:
 npm run dev
 ```
 
-Frontend usually at:
+Frontend usually available at:
 
 ```
 http://localhost:5173
 ```
 
----
-
 ## Environment variables
 
 The project uses `.env` for API configuration and credentials.
-Environment variables are not stored in the repository. Please provide them separately (for example via email or secure sharing).
+Environment variables are not stored in the repository. They must be provided separately (for example via email or secure sharing).
 
-Once you receive the variables, create the file in the frontend and backend folder:
+Create the files in each module:
 
 ```
 autoflex-front/.env
 autoflex-back/.env
 ```
 
----
-
-## Database (Docker)
-
-The database runs inside Docker. Before first use, you may need to create the database user in your Oracle container.
-
-Run the container (if not already running):
+Example (replace with provided values):
 
 ```
-docker-compose up -d
+DB_URL=...
+DB_USER=...
+DB_PASSWORD=...
 ```
 
-Then access the database and create the user (adjust according to your setup):
+## Database configuration (Oracle in Docker)
+
+After starting Docker, you may need to create the database user.
+Access the database and run:
 
 ```sql
 CREATE USER <db_user> IDENTIFIED BY <secure_password>;
-GRANT ALL PRIVILEGES TO <db_user>;
+GRANT CONNECT, RESOURCE TO <db_user>;
 ```
 
 Use secure credentials and do not commit them to the repository.
-
----
+Each developer should configure their own environment.
 
 ## Quick test
 
-1. Database running in Docker with user configured
+1. Database running in Docker
 2. Backend running on `localhost:8081`
 3. Frontend running on `localhost:5173`
 4. Open the browser and test the application
 
-If you encounter errors, send me a message.
-We’ll fix it.
+If you encounter errors, provide:
+
+* Stack trace
+* Node version
+* Database logs
+* Error screenshots
+
+We will assist in resolving the issue.
