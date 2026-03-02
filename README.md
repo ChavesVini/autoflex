@@ -7,9 +7,8 @@ Hands-on backend technical project developed as part of a company assessment, fo
 Before running the project, make sure you have installed:
 
 * Docker
-* Docker Compose
 * Java 21 (or the version required by Quarkus)
-* Maven (if not using the wrapper)
+* Maven 3.9.0+ (if not using the wrapper)
 * Node.js (recommended LTS version)
 
 ## How to run the project
@@ -91,15 +90,7 @@ DB_PASSWORD=...
 ## Database configuration (Oracle in Docker)
 
 After starting Docker, you may need to create the database user.
-Access the database and run:
-
-```sql
-CREATE USER <db_user> IDENTIFIED BY <secure_password>;
-GRANT CONNECT, RESOURCE TO <db_user>;
-```
-
-Use secure credentials and do not commit them to the repository.
-Each developer should configure their own environment.
+The database user variables are not stored in the repository. They also must be provided separately (for example via email or secure sharing).
 
 ## Quick test
 
